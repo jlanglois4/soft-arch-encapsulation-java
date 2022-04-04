@@ -203,5 +203,6 @@ public class Employee {
 
     public void printReport() {
         reportService.outputReport();
+        reportService.clearReport();
     }
 }

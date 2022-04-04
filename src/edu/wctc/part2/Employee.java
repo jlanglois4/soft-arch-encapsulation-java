@@ -31,7 +31,8 @@ public class Employee {
     private boolean reviewedDeptPolicies;
     private boolean movedIn;
     private String cubeId;
-    private LocalDate orientationDate;
+    private LocalDate orientationDate = LocalDate.now();
+    private String fmtDate = DateTimeFormatter.ofPattern("M/d/yy").format(orientationDate);
 
     public Employee(String firstName, String lastName, String ssn) {
         this.firstName = firstName;
@@ -39,22 +40,26 @@ public class Employee {
         this.ssn = ssn;
     }
 
+    public void doOrientation(String cubeId){
+        meetWithHrForBenefitAndSalaryInfo();
+        meetDepartmentStaff();
+        reviewDeptPolicies();
+        moveIntoCubicle(cubeId);
+    }
+
+
     // Assume this must be performed first, and assume that an employee
     // would only do this once, upon being hired.
-    public void meetWithHrForBenefitAndSalaryInfo() {
+    private void meetWithHrForBenefitAndSalaryInfo() {
         metWithHr = true;
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d/yy");
-        String fmtDate = formatter.format(orientationDate);
         System.out.println(firstName + " " + lastName + " met with HR on "
                 + fmtDate);
     }
 
     // Assume this must be performed second, and assume that an employee
     // would only do this once, upon being hired.
-    public void meetDepartmentStaff() {
+    private void meetDepartmentStaff() {
         metDeptStaff = true;
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d/yy");
-        String fmtDate = formatter.format(orientationDate);
         System.out.println(firstName + " " + lastName + " met with dept staff on "
                 + fmtDate);
     }
@@ -64,8 +69,6 @@ public class Employee {
     // independently from other classes.
     public void reviewDeptPolicies() {
         reviewedDeptPolicies = true;
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d/yy");
-        String fmtDate = formatter.format(orientationDate);
         System.out.println(firstName + " " + lastName + " reviewed dept policies on "
                 + fmtDate);
     }
@@ -76,8 +79,6 @@ public class Employee {
     public void moveIntoCubicle(String cubeId) {
         this.cubeId = cubeId;
         this.movedIn = true;
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d/yy");
-        String fmtDate = formatter.format(orientationDate);
         System.out.println(firstName + " " + lastName + " moved into cubicle "
                 + cubeId + " on " + fmtDate);
     }
@@ -98,7 +99,10 @@ public class Employee {
     }
 
     public void setLastName(String lastName) {
-        this.lastName = lastName;
+        if (lastName == null || lastName.equals("")){
+            throw new IllegalArgumentException("Last name is required.");
+        }
+            this.lastName = lastName;
     }
 
     public String getSsn() {
@@ -106,6 +110,9 @@ public class Employee {
     }
 
     public void setSsn(String ssn) {
+        if (ssn == null || ssn.length() < 9){
+            throw new IllegalArgumentException("Invalid SSN.");
+        }
         this.ssn = ssn;
     }
 
@@ -130,14 +137,13 @@ public class Employee {
     }
 
     public void setCubeId(String cubeId) {
+        if (cubeId == null || cubeId.equals("")) {
+            throw new IllegalArgumentException("Invalid Cube ID.");
+        }
         this.cubeId = cubeId;
     }
 
     public LocalDate getOrientationDate() {
         return orientationDate;
-    }
-
-    public void setOrientationDate(LocalDate orientationDate) {
-        this.orientationDate = orientationDate;
     }
 }

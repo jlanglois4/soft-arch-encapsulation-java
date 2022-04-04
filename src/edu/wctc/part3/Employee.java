@@ -48,6 +48,7 @@ public class Employee {
     private String cubeId;
     private LocalDate orientationDate;
     private final CommandLineOutputService output = new CommandLineOutputService();
+    private EmployeeErrorReportOutput errorReportOutput = new EmployeeErrorReportOutput();
 
     public Employee(String firstName, String lastName, String ssn) {
         // Using setter method guarantees validation will be performed
@@ -102,7 +103,7 @@ public class Employee {
     // doFirstTimeOrientation()
     private void meetDepartmentStaff() {
         metDeptStaff = true;
-        System.out.println(firstName + " " + lastName + " met with dept staff on "
+        output.simpleOutput(firstName + " " + lastName + " met with dept staff on "
                 + getFormattedDate());
     }
 
@@ -111,7 +112,7 @@ public class Employee {
     // independently from other classes.
     public void reviewDeptPolicies() {
         reviewedDeptPolicies = true;
-        System.out.println(firstName + " " + lastName + " reviewed dept policies on "
+        output.simpleOutput(firstName + " " + lastName + " reviewed dept policies on "
                 + getFormattedDate());
     }
 
@@ -120,9 +121,8 @@ public class Employee {
     // independently from other classes.
     public void moveIntoCubicle(String cubeId) {
         setCubeId(cubeId);
-
         this.movedIn = true;
-        System.out.println(firstName + " " + lastName + " moved into cubicle "
+        output.simpleOutput(firstName + " " + lastName + " moved into cubicle "
                 + cubeId + " on " + getFormattedDate());
     }
 
@@ -135,9 +135,7 @@ public class Employee {
     // practice when validation fails. Don't do a System.out.println()
     // to display an error message -- not the job of this class!
     public void setFirstName(String firstName) {
-        if (firstName == null || firstName.isBlank()) {
-            throw new IllegalArgumentException("first name is required");
-        }
+        errorReportOutput.reportOutput("first name");
         this.firstName = firstName;
     }
 
@@ -146,9 +144,7 @@ public class Employee {
     }
 
     public void setLastName(String lastName) {
-        if (lastName == null || lastName.isBlank()) {
-            System.out.println("last name is required");
-        }
+        errorReportOutput.reportOutput("last name");
         this.lastName = lastName;
     }
 
@@ -157,10 +153,7 @@ public class Employee {
     }
 
     public void setSsn(String ssn) {
-        if (ssn == null || ssn.length() < 9 || ssn.length() > 11) { // Magic numbers!
-            System.out.println("ssn is required and must be "
-                    + "between 9 and 11 characters (if hyphens are used)");
-        }
+        errorReportOutput.reportOutput("ssn");
         this.ssn = ssn;
     }
 
@@ -185,9 +178,7 @@ public class Employee {
     }
 
     public void setCubeId(String cubeId) {
-        if (cubeId == null || cubeId.isBlank()) {
-            System.out.println("cube id is required");
-        }
+        errorReportOutput.reportOutput("cube id");
         this.cubeId = cubeId;
     }
 
